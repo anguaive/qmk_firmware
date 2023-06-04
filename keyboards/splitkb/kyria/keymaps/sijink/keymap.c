@@ -44,60 +44,65 @@ enum keycodes {
 #define HUN      MO(_HUN)
 #define NUM      MO(_NUM)
 #define MOUSE    MO(_MOUSE)
-#define ADJUST   OSL(_ADJUST)
+#define ADJUST   MO(_ADJUST)
 
 #define OSMEH    OSM(MOD_MEH)
+#define OSLS     OSM(MOD_LSFT)
+#define OSRS     OSM(MOD_RSFT)
 #define ALTTAB   LALT(KC_TAB)
+
+#define M_ENTER  LT(MOUSE, KC_ENT)
+#define M_SPACE  LT(MOUSE, KC_SPC)
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
-     KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P ,  KC_BSPC,
-     KC_ESC,   KC_A ,  KC_S   ,  KC_D  ,   KC_F ,   KC_G ,                                        KC_H,   KC_J ,  KC_K ,   KC_L , KC_SCLN, KC_QUOT,
-     OS_SHFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , XXXXXXX, ADJUST,     KC_PSCR, XXXXXXX, KC_N,   KC_M , KC_COMM, KC_DOT ,KC_SLSH, OS_SHFT,
-                                 HUN   ,   KC_MINS, NAV  , KC_ENT , MOUSE ,     OSMEH  , KC_SPC,  SYM ,   KC_BSLS, ALTTAB
+      KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                                     KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSPC,
+      KC_ESC , KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                                     KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
+      OSLS   , KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX, KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, OSRS,
+                                 ADJUST , QK_REP , M_ENTER, NAV    , KC_MINS, KC_BSLS, SYM    , M_SPACE, OSMEH  , ALTTAB
     ),
     [_COLEMAK_DH] = LAYOUT(
-     XXXXXXX , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, KC_BSPC,
-     KC_ESC  , KC_A ,  KC_R   ,  KC_S  ,   KC_T ,   KC_G ,                                        KC_M,   KC_N ,  KC_E ,   KC_I ,  KC_O , KC_QUOT,
-     OS_SHFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_D ,   KC_V , XXXXXXX, ADJUST,     KC_PSCR, XXXXXXX, KC_K,   KC_H , KC_COMM, KC_DOT ,KC_SLSH, OS_SHFT,
-                                 HUN   ,   KC_MINS, NAV  , KC_ENT , MOUSE ,     OSMEH  , KC_SPC , SYM ,   KC_BSLS, ALTTAB
+      KC_TAB , KC_Q   , KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , KC_U   , KC_Y   , KC_SCLN, KC_BSPC,
+      KC_ESC , KC_A   , KC_R   , KC_S   , KC_T   , KC_G   ,                                     KC_M   , KC_N   , KC_E   , KC_I   , KC_O   , KC_QUOT,
+      OSLS   , KC_Z   , KC_X   , KC_C   , KC_D   , KC_V   , XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX, KC_K   , KC_H   , KC_COMM, KC_DOT , KC_SLSH, OSRS   ,
+                                 ADJUST , QK_REP , M_ENTER, NAV    , KC_MINS, KC_BSLS, SYM    , M_SPACE, OSMEH  , ALTTAB
     ),
     [_NAV] = LAYOUT(
-      _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX,                                    KC_CUT , KC_COPY, KC_PSTE, KC_FIND, XXXXXXX, KC_DEL,
-      _______, OS_GUI, OS_ALT, OS_CTRL, OS_SHFT, XXXXXXX,                                    KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, XXXXXXX, XXXXXXX,
-      _______, XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,KC_HOME, KC_PGDN, KC_PGUP, KC_END , XXXXXXX, _______,
+      _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX,                                     KC_CUT , KC_COPY, KC_PSTE, KC_FIND, XXXXXXX, KC_DEL,
+      _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, XXXXXXX,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, XXXXXXX, XXXXXXX,
+      _______, XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END , XXXXXXX, _______,
                                  XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
     ),
     [_SYM] = LAYOUT(
-     _______, XXXXXXX ,   KC_LBRC ,   KC_LCBR ,   KC_LPRN ,   KC_TILD ,                KC_CIRC ,   KC_RPRN ,   KC_RCBR ,   KC_RBRC ,   XXXXXXX , KC_DEL ,
-     _______ , KC_PMNS,  KC_ASTR , KC_PEQL,  KC_UNDS, KC_DLR,                          KC_HASH, OS_SHFT, OS_CTRL, OS_ALT, OS_GUI, XXXXXXX,
-     _______ , KC_PPLS, KC_PIPE, KC_AT, KC_PSLS, KC_PERC,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSLS, KC_AMPR,  KC_QUES, KC_EXLM, _______,
+      _______, XXXXXXX, KC_LBRC, KC_LCBR, KC_LPRN, KC_TILD,                                     KC_CIRC, KC_RPRN, KC_RCBR, KC_RBRC, KC_EQL , KC_DEL ,
+      _______, KC_MINS, KC_ASTR, KC_SLSH, KC_UNDS, KC_DLR,                                      KC_HASH, OS_SHFT, OS_CTRL, OS_ALT , OS_GUI , XXXXXXX,
+      _______, KC_PLUS, KC_AMPR, KC_BSLS, KC_GRV , KC_PERC, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PIPE, KC_AT  , KC_QUES, KC_EXLM, _______,
                                  XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
     ),
     [_HUN] = LAYOUT(
-      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     UC(0x0D9E), UC(0x00D3), UC(0x00D6), UC(0x0150), XXXXXXX, _______,
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     UC(0x0D9E), UC(0x00D3), UC(0x00D6), UC(0x0150), XXXXXXX, KC_BSPC,
       _______, OS_GUI, OS_ALT, OS_CTRL, OS_SHFT, XXXXXXX,                                     XXXXXXX, UC(0x00C1), UC(0x00C9), UC(0x00CD), XXXXXXX, XXXXXXX,
       _______, XXXXXXX, XXXXXXX, UC_WINC, UC_LINX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UC(0x00DA), UC(0x00DC), UC(0x0170), XXXXXXX, _______,
-                                 _______, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX,    XXXXXXX
+                                 _______, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX
     ),
     [_NUM] = LAYOUT(
-      _______, KC_7  , KC_5  , KC_3  , KC_1  , KC_9  ,                                     KC_8 , KC_0  , KC_2  , KC_4  , KC_6  , _______,
-      _______, OS_GUI, OS_ALT, OS_CTRL, OS_SHFT, KC_F11 ,                                     KC_F10, OS_SHFT, OS_CTRL, OS_ALT, OS_GUI, _______,
-      _______, KC_F7  , KC_F5  , KC_F5  , KC_F1  , KC_F9  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F8 , KC_F12 , KC_F2  , KC_F4  , KC_F6  , _______,
+      _______, KC_7   , KC_5   , KC_3   , KC_1   , KC_9   ,                                     KC_8   , KC_0   , KC_2   , KC_4   , KC_6   , KC_BSPC,
+      _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, KC_F11 ,                                     KC_F10 , OS_SHFT, OS_CTRL, OS_ALT , OS_GUI , _______,
+      _______, KC_F7  , KC_F5  , KC_F5  , KC_F1  , KC_F9  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F8  , KC_F12 , KC_F2  , KC_F4  , KC_F6  , _______,
                                  XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
     ),
     [_MOUSE] = LAYOUT(
-      _______,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX,                                     KC_CUT, KC_COPY, KC_PSTE, KC_FIND, XXXXXXX, _______,
-      _______,  KC_BTN4,  KC_BTN3,  KC_BTN2,  KC_BTN1, KC_BTN5,                                     KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, XXXXXXX, _______,
-      _______,  XXXXXXX,  KC_ACL2,  KC_ACL1,  KC_ACL0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX, _______,
-                                    XXXXXXX,  XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX
+      _______, XXXXXXX, KC_FIND, KC_PSTE, KC_COPY, KC_CUT ,                                     KC_ESC , KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX, _______,
+      _______, KC_BTN4, KC_BTN3, KC_BTN2, KC_BTN1, KC_BTN5,                                     KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ENT , _______,
+      _______, XXXXXXX, KC_ACL2, KC_ACL1, KC_ACL0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX, _______,
+                                 XXXXXXX, XXXXXXX, _______, XXXXXXX, _______, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX
     ),
     [_ADJUST] = LAYOUT(
-      XXXXXXX, QWERTY , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                    RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,  XXXXXXX, XXXXXXX,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                    RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,  XXXXXXX, XXXXXXX,
-      XXXXXXX, XXXXXXX, XXXXXXX, COLEMAK, XXXXXXX, XXXXXXX,XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                 XXXXXXX, XXXXXXX, XXXXXXX,XXXXXXX, XXXXXXX, XXXXXXX, RGB_MOD, RGB_RMOD, RGB_TOG, XXXXXXX
+      XXXXXXX, QWERTY , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, COLEMAK, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_MOD, RGB_RMOD,RGB_TOG, XXXXXXX
     ),
 //     [_LAYERINDEX] = LAYOUT(
 //       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
