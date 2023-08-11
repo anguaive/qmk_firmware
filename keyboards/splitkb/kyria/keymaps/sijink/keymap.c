@@ -13,9 +13,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "action_layer.h"
 #include QMK_KEYBOARD_H
 
+#include "action_layer.h"
 #include <stdint.h>
 #include "action_util.h"
 #include "modifiers.h"
@@ -64,6 +64,12 @@ typedef enum {
     TD_HOLD
 } td_state_t;
 
+typedef struct {
+    uint16_t tap;
+    uint16_t hold;
+    uint16_t held;
+} tap_dance_tap_hold_t;
+
 // Layer aliases
 #define BASE     TO(_COLEMAK_DH)
 #define MO_NAV   MO(_NAV)
@@ -74,61 +80,59 @@ typedef enum {
 #define ADJUST   TG(_ADJUST)
 #define MO_ADJ   MO(_ADJUST)
 
-// Tap-hold keycodes, for cases when hold should act as a "regular keypress"
-#define U_UNDS   LT(0, KC_U)
-#define G_MINS   LT(0, KC_G)
-#define COM_QUO  LT(0, KC_COMM)
-#define DOT_DQU  LT(0, KC_DOT)
-#define SLS_EXL  LT(0, KC_SLSH)
-#define SLS_BSL  LT(0, KC_SLSH)
-#define AMP_TLD  LT(0, KC_AMPR)
-#define QUO_GRV  LT(0, KC_DQUO)
-#define CPY_PSC  LT(0, KC_PSCR)
-#define PST_INS  LT(0, KC_INS)
-#define N1_F1    LT(0, KC_1)
-#define N2_F2    LT(0, KC_2)
-#define N3_F3    LT(0, KC_3)
-#define N4_F4    LT(0, KC_4)
-#define N5_F5    LT(0, KC_5)
-#define N6_F6    LT(0, KC_6)
-#define N7_F7    LT(0, KC_7)
-#define N8_F8    LT(0, KC_8)
-#define N9_F9    LT(0, KC_9)
-#define N0_F10   LT(0, KC_0)
-#define MIN_F11  LT(0, KC_MINS)
-#define PLS_F12  LT(0, KC_PLUS)
-
 // tap dance
 enum {
-    TD_WM_NAV,
-    TD_HUN_Q
+    WM_NAV, // GUI | shift+GUI | hold for NAV
+    Q_HUN, // q | hold for one-shot HUN
+    AMP_TLD,
+    U_UNDS,
+    G_MINS,
+    COM_QUO,
+    DOT_DQU,
+    SLS_EXL,
+    SLS_BSL,
+    QUO_GRV,
+    CPY_PSC,
+    PST_INS,
+    N1_F1,
+    N2_F2,
+    N3_F3,
+    N4_F4,
+    N5_F5,
+    N6_F6,
+    N7_F7,
+    N8_F8,
+    N9_F9,
+    N0_F10,
+    MIN_F11,
+    PLS_F12
 };
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK_DH] = LAYOUT(
-      KC_TAB,TD(TD_HUN_Q),KC_W , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , U_UNDS , KC_Y   , KC_SCLN, KC_BSPC,
-      KC_ESC , KC_A   , KC_R   , KC_S   , KC_T   , G_MINS ,                                     KC_M   , KC_N   , KC_E   , KC_I   , KC_O   , KC_MINS,
-      KC_LCTL, MOUZE  , KC_X   , KC_C   , KC_D   , KC_V   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_K   , KC_H   , COM_QUO, DOT_DQU, SLS_EXL, KC_RCTL,
-                                 MO_ADJ , XXXXXXX,KC_LSFT,TD(TD_WM_NAV),XXXXXXX,XXXXXXX,OSL_SYM,KC_SPC , MO_NAV , XXXXXXX
+      KC_TAB,TD(Q_HUN), KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L ,TD(U_UNDS), KC_Y     , KC_SCLN   ,  KC_BSPC,
+      KC_ESC , KC_A   , KC_R   , KC_S   , KC_T   , TD(G_MINS),                                  KC_M   , KC_N   , KC_E   , KC_I     , KC_O      ,  KC_MINS,
+      KC_LCTL, MOUZE  , KC_X   , KC_C   , KC_D   , KC_V   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_K   , KC_H,TD(COM_QUO),TD(DOT_DQU),TD(SLS_EXL), KC_RCTL,
+                                 MO_ADJ , XXXXXXX,KC_LSFT,TD(WM_NAV),XXXXXXX,XXXXXXX,OSL_SYM,  KC_SPC , MO_NAV, XXXXXXX
     ),
     [_SYM] = LAYOUT(
-      XXXXXXX, KC_TAB , KC_AMPR, KC_HASH, KC_DLR , KC_PERC,                                     KC_CIRC, KC_PIPE, KC_UNDS, KC_EQL , KC_BSPC, XXXXXXX,
-      XXXXXXX, KC_ESC , KC_LBRC, KC_LCBR, KC_LPRN, KC_MINS,                                     KC_PLUS, KC_RPRN, KC_RCBR, KC_RBRC, KC_ENT , XXXXXXX,
-      XXXXXXX, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, SLS_BSL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ASTR, AMP_TLD, QUO_GRV, KC_DQUO, KC_DEL , XXXXXXX,
+      XXXXXXX, KC_TAB , KC_AT  , KC_HASH, KC_DLR , KC_PERC,                                     KC_CIRC, KC_PIPE,   KC_UNDS,    KC_EQL , KC_BSPC, XXXXXXX,
+      XXXXXXX, KC_ESC , KC_LBRC, KC_LCBR, KC_LPRN, KC_MINS,                                     KC_PLUS, KC_RPRN,   KC_RCBR,    KC_RBRC, KC_ENT , XXXXXXX,
+      XXXXXXX, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT,TD(SLS_BSL),XXXXXXX,XXXXXXX,XXXXXXX, XXXXXXX, KC_ASTR,TD(AMP_TLD),TD(QUO_GRV),KC_DQUO, KC_DEL , XXXXXXX,
                                  XXXXXXX, XXXXXXX, BASE   , MO_NAV , XXXXXXX, XXXXXXX, TG_NUM , _______, XXXXXXX, XXXXXXX
     ),
     [_NUM] = LAYOUT(
-      XXXXXXX, _______, XXXXXXX, N9_F9  , N7_F7  , _______,                                     _______, N6_F6  , N8_F8  , _______, _______, XXXXXXX,
-      XXXXXXX, _______, N5_F5  , N3_F3  , N1_F1  , MIN_F11,                                     PLS_F12, N0_F10 , N2_F2  , N4_F4  , _______, XXXXXXX,
-      XXXXXXX, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX,
-                                 XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
+      XXXXXXX,_______, XXXXXXX, TD(N9_F9),TD(N7_F7), _______,                                  _______, TD(N6_F6), TD(N8_F8),_______, _______, XXXXXXX,
+      XXXXXXX,_______,TD(N5_F5),TD(N3_F3),TD(N1_F1),TD(MIN_F11),                           TD(PLS_F12), TD(N0_F10),TD(N2_F2),TD(N4_F4), _______, XXXXXXX,
+      XXXXXXX, _______, _______, _______, _______,   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, KC_COMM, KC_DOT , _______, XXXXXXX,
+                                 XXXXXXX, XXXXXXX,   _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
     ),
     [_NAV] = LAYOUT(
-      XXXXXXX, KC_TAB , KC_MPRV, KC_MPLY, KC_MNXT, KC_MFFD,                                     KC_CUT , CPY_PSC, PST_INS, KC_FIND, KC_BSPC, XXXXXXX,
-      XXXXXXX, KC_ESC , KC_VOLD, KC_MUTE, KC_VOLU, KC_MRWD,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, KC_ENT , XXXXXXX,
-      XXXXXXX, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, KC_PAUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END , KC_DEL , XXXXXXX,
-                                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, ADJUST , _______, XXXXXXX, XXXXXXX
+      XXXXXXX, KC_TAB , KC_MPRV, KC_MPLY, KC_MNXT, KC_MFFD,                                     KC_CUT,TD(CPY_PSC),TD(PST_INS),KC_FIND, KC_BSPC, XXXXXXX,
+      XXXXXXX, KC_ESC , KC_VOLD, KC_MUTE, KC_VOLU, KC_MRWD,                                     KC_LEFT, KC_DOWN,  KC_UP  ,    KC_RGHT, KC_ENT , XXXXXXX,
+      XXXXXXX, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, KC_PAUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN,  KC_PGUP,    KC_END , KC_DEL , XXXXXXX,
+                                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, ADJUST , _______, XXXXXXX,  XXXXXXX
     ),
     [_MOUSE] = LAYOUT(
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     KC_CUT , KC_COPY, KC_PSTE, KC_FIND, KC_BSPC, XXXXXXX,
@@ -176,7 +180,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case BASE:
     case OSL_SYM:
     case TG_NUM:
-    case TD(TD_WM_NAV):
+    case TD(WM_NAV):
     case MO_NAV:
     case MOUZE:
         return true;
@@ -189,6 +193,8 @@ oneshot_state os_shft_state = os_up_unqueued;
 oneshot_state os_ctrl_state = os_up_unqueued;
 oneshot_state os_alt_state = os_up_unqueued;
 oneshot_state os_gui_state = os_up_unqueued;
+
+layer_state_t cached_layer_state;
 
 #define SIJ_ACUTE  SS_DOWN(X_RALT)"'"SS_UP(X_RALT)
 #define SIJ_DACUTE SS_DOWN(X_RALT)SS_DOWN(X_LSFT)"2"SS_UP(X_LSFT)SS_UP(X_RALT)
@@ -258,6 +264,10 @@ bool tap_hold(uint16_t keycode, keyrecord_t *record, uint16_t trigger, uint16_t 
     if (keycode == trigger) {
         if (!record->tap.count && record->event.pressed) {
             tap_code16(hold);
+            if (get_highest_layer(cached_layer_state) <= _SYM) {
+                layer_off(_SYM);
+            }
+
             // stop processing
             return false;
         }
@@ -320,8 +330,6 @@ const rgblight_segment_t* const PROGMEM rgb_layers[] = RGBLIGHT_LAYERS_LIST(
     rgb_layer_base, rgb_layer_sym, rgb_layer_num, rgb_layer_nav, rgb_layer_hun
 );
 
-layer_state_t cached_layer_state;
-
 layer_state_t default_layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(0, layer_state_cmp(state, _COLEMAK_DH));
     return state;
@@ -352,32 +360,45 @@ void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+void handle_tap_dance(uint16_t keycode, keyrecord_t *record) {
+    tap_dance_action_t *action;
+
+    switch (keycode) {
+        case TD(AMP_TLD):
+        case TD(U_UNDS):
+        case TD(G_MINS):
+        case TD(COM_QUO):
+        case TD(DOT_DQU):
+        case TD(SLS_EXL):
+        case TD(SLS_BSL):
+        case TD(QUO_GRV):
+        case TD(CPY_PSC):
+        case TD(PST_INS):
+        case TD(N1_F1):
+        case TD(N2_F2):
+        case TD(N3_F3):
+        case TD(N4_F4):
+        case TD(N5_F5):
+        case TD(N6_F6):
+        case TD(N7_F7):
+        case TD(N8_F8):
+        case TD(N9_F9):
+        case TD(N0_F10):
+        case TD(MIN_F11):
+        case TD(PLS_F12):
+            action = &tap_dance_actions[TD_INDEX(keycode)];
+            if (!record->event.pressed && action->state.count && !action->state.finished) {
+                tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)action->user_data;
+                tap_code16(tap_hold->tap);
+            }
+    }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    handle_tap_dance(keycode, record);
+
     if (!tg_on_keydown(keycode, record)) return false;
     if (!osl_on_keydown(keycode, record)) return false;
-
-    if (!tap_hold(keycode, record, U_UNDS, KC_UNDS)) return false;
-    if (!tap_hold(keycode, record, G_MINS, KC_MINS)) return false;
-    if (!tap_hold(keycode, record, COM_QUO, KC_QUOT)) return false;
-    if (!tap_hold(keycode, record, DOT_DQU, KC_DQUO)) return false;
-    if (!tap_hold(keycode, record, SLS_EXL, KC_EXLM)) return false;
-    if (!tap_hold(keycode, record, SLS_BSL, KC_BSLS)) return false;
-    if (!tap_hold(keycode, record, AMP_TLD, KC_TILD)) return false;
-    if (!tap_hold(keycode, record, QUO_GRV, KC_GRV)) return false;
-    if (!tap_hold(keycode, record, CPY_PSC, KC_PSCR)) return false;
-    if (!tap_hold(keycode, record, PST_INS, KC_INS)) return false;
-    if (!tap_hold(keycode, record, N1_F1, KC_F1)) return false;
-    if (!tap_hold(keycode, record, N2_F2, KC_F2)) return false;
-    if (!tap_hold(keycode, record, N3_F3, KC_F3)) return false;
-    if (!tap_hold(keycode, record, N4_F4, KC_F4)) return false;
-    if (!tap_hold(keycode, record, N5_F5, KC_F5)) return false;
-    if (!tap_hold(keycode, record, N6_F6, KC_F6)) return false;
-    if (!tap_hold(keycode, record, N7_F7, KC_F7)) return false;
-    if (!tap_hold(keycode, record, N8_F8, KC_F8)) return false;
-    if (!tap_hold(keycode, record, N9_F9, KC_F9)) return false;
-    if (!tap_hold(keycode, record, N0_F10, KC_F10)) return false;
-    if (!tap_hold(keycode, record, MIN_F11, KC_F1)) return false;
-    if (!tap_hold(keycode, record, PLS_F12, KC_F1)) return false;
 
     update_oneshot(
         &os_shft_state, KC_LSFT, OS_SHFT,
@@ -441,7 +462,6 @@ void td_hun_q_finished_fn(tap_dance_state_t *state, void *user_data) {
     td_state_t td_state = cur_dance(state);
     switch (td_state) {
         case (TD_HOLD):
-            // acts mode like a toggle actually... have to reset in handler
             layer_on(_HUN);
             break;
         default:
@@ -452,9 +472,61 @@ void td_hun_q_finished_fn(tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void tap_dance_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
+    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
+
+    if (state->pressed) {
+        if (state->count == 1
+#ifndef PERMISSIVE_HOLD
+            && !state->interrupted
+#endif
+        ) {
+            register_code16(tap_hold->hold);
+            tap_hold->held = tap_hold->hold;
+        } else {
+            register_code16(tap_hold->tap);
+            tap_hold->held = tap_hold->tap;
+        }
+    }
+}
+
+void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
+    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
+
+    if (tap_hold->held) {
+        unregister_code16(tap_hold->held);
+        tap_hold->held = 0;
+    }
+}
+
+#define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
+    { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
+
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_WM_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_wm_nav_finished_fn, td_wm_nav_reset_fn),
-    [TD_HUN_Q] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hun_q_finished_fn, NULL)
+    [WM_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_wm_nav_finished_fn, td_wm_nav_reset_fn),
+    [Q_HUN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hun_q_finished_fn, NULL),
+    [AMP_TLD] = ACTION_TAP_DANCE_TAP_HOLD(KC_AMPR, KC_TILD),
+    [U_UNDS] = ACTION_TAP_DANCE_TAP_HOLD(KC_U, KC_UNDS),
+    [G_MINS] = ACTION_TAP_DANCE_TAP_HOLD(KC_G, KC_MINS),
+    [COM_QUO] = ACTION_TAP_DANCE_TAP_HOLD(KC_COMM, KC_QUOT),
+    [DOT_DQU] = ACTION_TAP_DANCE_TAP_HOLD(KC_DOT, KC_DQUO),
+    [SLS_EXL] = ACTION_TAP_DANCE_TAP_HOLD(KC_SLSH, KC_EXLM),
+    [SLS_BSL] = ACTION_TAP_DANCE_TAP_HOLD(KC_SLSH, KC_BSLS),
+    [QUO_GRV] = ACTION_TAP_DANCE_TAP_HOLD(KC_QUOT, KC_GRV),
+    [CPY_PSC] = ACTION_TAP_DANCE_TAP_HOLD(KC_COPY, KC_PSCR),
+    [PST_INS] = ACTION_TAP_DANCE_TAP_HOLD(KC_PSTE, KC_INS),
+    [N1_F1] = ACTION_TAP_DANCE_TAP_HOLD(KC_1, KC_F1),
+    [N2_F2] = ACTION_TAP_DANCE_TAP_HOLD(KC_2, KC_F2),
+    [N3_F3] = ACTION_TAP_DANCE_TAP_HOLD(KC_3, KC_F3),
+    [N4_F4] = ACTION_TAP_DANCE_TAP_HOLD(KC_4, KC_F4),
+    [N5_F5] = ACTION_TAP_DANCE_TAP_HOLD(KC_5, KC_F5),
+    [N6_F6] = ACTION_TAP_DANCE_TAP_HOLD(KC_6, KC_F6),
+    [N7_F7] = ACTION_TAP_DANCE_TAP_HOLD(KC_7, KC_F7),
+    [N8_F8] = ACTION_TAP_DANCE_TAP_HOLD(KC_8, KC_F8),
+    [N9_F9] = ACTION_TAP_DANCE_TAP_HOLD(KC_9, KC_F9),
+    [N0_F10] = ACTION_TAP_DANCE_TAP_HOLD(KC_0, KC_F10),
+    [MIN_F11] = ACTION_TAP_DANCE_TAP_HOLD(KC_MINS, KC_F1),
+    [PLS_F12] = ACTION_TAP_DANCE_TAP_HOLD(KC_PLUS, KC_F1)
 };
 
 void keyboard_pre_init_user(void) {
