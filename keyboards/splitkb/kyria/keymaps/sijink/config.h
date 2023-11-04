@@ -18,6 +18,8 @@
 
 #define ONESHOT_TIMEOUT 1000
 
+#define SPLIT_WATCHDOG_ENABLE
+
 #define NO_ALT_REPEAT_KEY
 
 #define MK_COMBINED
