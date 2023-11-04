@@ -94,16 +94,16 @@ enum {
     QUO_GRV,
     CPY_PSC,
     PST_INS,
-    N1_F1,
-    N2_F2,
-    N3_F3,
-    N4_F4,
-    N5_F5,
-    N6_F6,
-    N7_F7,
-    N8_F8,
-    N9_F9,
-    N0_F10,
+    N1,
+    N2,
+    N3,
+    N4,
+    N5,
+    N6,
+    N7,
+    N8,
+    N9,
+    N10,
     MIN_F11,
     PLS_F12
 };
@@ -114,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_TAB,  KC_W   , KC_L   , KC_Y   , KC_P   , KC_B   ,                                     KC_Z   , KC_F   , KC_O,    KC_U   , KC_QUOT, KC_BSPC,
       KC_ESC , KC_C   , KC_R   , KC_S   , KC_T   , KC_G   ,                                     KC_M   , KC_N   , KC_E   , KC_I   , KC_A   , KC_ENT ,
       KC_LCTL, MQUSE  , KC_J   , KC_V   , KC_D   , KC_K   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_X   , KC_H   , KC_SLSH, KC_COMM, KC_DOT , KC_DEL ,
-                                 MO_ADJ , XXXXXXX,KC_SPC,TD(WM_NAV),XXXXXXX, XXXXXXX, OSL_SYM, KC_LSFT , MO_NAV , XXXXXXX
+                                 MO_ADJ , MO_NAV ,KC_SPC,TD(WM_NAV),XXXXXXX, XXXXXXX, OSL_SYM, KC_LSFT , MO_NAV , XXXXXXX
     ),
     [_SYM] = LAYOUT(
       _______, KC_TILD, KC_AT  , KC_HASH, KC_DLR , KC_PERC,                                     KC_CIRC, KC_LPRN, KC_RPRN, KC_EQL , KC_COLN, _______,
@@ -123,9 +123,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  XXXXXXX, XXXXXXX, _______, MO_NAV , XXXXXXX, XXXXXXX, TG_NUM , BASE   , XXXXXXX, XXXXXXX
     ),
     [_NUM] = LAYOUT(
-      _______, _______, XXXXXXX, TD(N9_F9),TD(N7_F7), KC_QUES,                                  _______, TD(N6_F6),TD(N8_F8),_______, KC_QUOT, XXXXXXX,
-      _______, _______,TD(N5_F5),TD(N3_F3),TD(N1_F1),TD(MIN_F11),                           TD(PLS_F12), TD(N0_F10),TD(N2_F2),TD(N4_F4), KC_DQUO, XXXXXXX,
-      _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LT  , KC_GT  , KC_SLSH, KC_COMM, KC_DOT , XXXXXXX,
+      _______, _______, XXXXXXX, TD(N9) , TD(N7) , KC_QUES,                                     _______, TD(N6) , TD(N8) , _______, KC_QUOT, _______,
+      _______, _______, TD(N5) , TD(N3) , TD(N1) ,TD(MIN_F11),                              TD(PLS_F12), TD(N10), TD(N2) , TD(N4) , KC_DQUO, _______,
+      _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LT  , KC_GT  , KC_SLSH, KC_COMM, KC_DOT , _______,
                                  XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
     ),
     [_NAV] = LAYOUT(
@@ -135,14 +135,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, ADJUST , XXXXXXX, XXXXXXX,  XXXXXXX
     ),
     [_MOUSE] = LAYOUT(
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     KC_CUT , KC_COPY, KC_PSTE, KC_FIND, KC_BSPC, XXXXXXX,
-      XXXXXXX, KC_BTN4, KC_BTN3, KC_BTN2, KC_BTN1, KC_BTN5,                                     KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ENT , XXXXXXX,
-      XXXXXXX, XXXXXXX, KC_ACL2, KC_ACL1, KC_ACL0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_DEL , XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     KC_CUT , KC_COPY, KC_PSTE, KC_FIND, KC_BSPC, _______,
+      XXXXXXX, KC_BTN4, KC_BTN3, KC_BTN2, KC_BTN1, KC_BTN5,                                     KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ENT , _______,
+      XXXXXXX, XXXXXXX, KC_ACL2, KC_ACL1, KC_ACL0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_DEL , _______,
                                  XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
     ),
     [_HUN] = LAYOUT(
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, U_UMLAU, U_ACUT , U_DACUT, O_UMLAU, XXXXXXX,
-      XXXXXXX, A_ACUT , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, XXXXXXX, E_ACUT , I_ACUT , O_ACUT , XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, U_UMLAU, U_ACUT , U_DACUT, O_UMLAU, _______,
+      XXXXXXX, A_ACUT , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, XXXXXXX, E_ACUT , I_ACUT , O_ACUT , _______,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, O_DACUT, XXXXXXX,
                                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX
     ),
@@ -374,16 +374,16 @@ void handle_tap_dance(uint16_t keycode, keyrecord_t *record) {
         case TD(QUO_GRV):
         case TD(CPY_PSC):
         case TD(PST_INS):
-        case TD(N1_F1):
-        case TD(N2_F2):
-        case TD(N3_F3):
-        case TD(N4_F4):
-        case TD(N5_F5):
-        case TD(N6_F6):
-        case TD(N7_F7):
-        case TD(N8_F8):
-        case TD(N9_F9):
-        case TD(N0_F10):
+        case TD(N1):
+        case TD(N2):
+        case TD(N3):
+        case TD(N4):
+        case TD(N5):
+        case TD(N6):
+        case TD(N7):
+        case TD(N8):
+        case TD(N9):
+        case TD(N10):
         case TD(MIN_F11):
         case TD(PLS_F12):
             action = &tap_dance_actions[TD_INDEX(keycode)];
@@ -490,6 +490,22 @@ void tap_dance_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
     }
 }
 
+void tap_dance_tap_hold_no_repeat_finished(tap_dance_state_t *state, void *user_data) {
+    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
+
+    if (state->pressed) {
+        if (state->count == 1
+#ifndef PERMISSIVE_HOLD
+            && !state->interrupted
+#endif
+        ) {
+            tap_code16(tap_hold->hold);
+        } else {
+            tap_code16(tap_hold->tap);
+        }
+    }
+}
+
 void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
     tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
 
@@ -501,6 +517,9 @@ void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
 
 #define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
     { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
+
+#define ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(tap, hold) \
+    { .fn = {NULL, tap_dance_tap_hold_no_repeat_finished, NULL}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
 
 tap_dance_action_t tap_dance_actions[] = {
     [WM_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_wm_nav_finished_fn, td_wm_nav_reset_fn),
@@ -515,18 +534,18 @@ tap_dance_action_t tap_dance_actions[] = {
     [QUO_GRV] = ACTION_TAP_DANCE_TAP_HOLD(KC_QUOT, KC_GRV),
     [CPY_PSC] = ACTION_TAP_DANCE_TAP_HOLD(KC_COPY, KC_PSCR),
     [PST_INS] = ACTION_TAP_DANCE_TAP_HOLD(KC_PSTE, KC_INS),
-    [N1_F1] = ACTION_TAP_DANCE_TAP_HOLD(KC_1, KC_F1),
-    [N2_F2] = ACTION_TAP_DANCE_TAP_HOLD(KC_2, KC_F2),
-    [N3_F3] = ACTION_TAP_DANCE_TAP_HOLD(KC_3, KC_F3),
-    [N4_F4] = ACTION_TAP_DANCE_TAP_HOLD(KC_4, KC_F4),
-    [N5_F5] = ACTION_TAP_DANCE_TAP_HOLD(KC_5, KC_F5),
-    [N6_F6] = ACTION_TAP_DANCE_TAP_HOLD(KC_6, KC_F6),
-    [N7_F7] = ACTION_TAP_DANCE_TAP_HOLD(KC_7, KC_F7),
-    [N8_F8] = ACTION_TAP_DANCE_TAP_HOLD(KC_8, KC_F8),
-    [N9_F9] = ACTION_TAP_DANCE_TAP_HOLD(KC_9, KC_F9),
-    [N0_F10] = ACTION_TAP_DANCE_TAP_HOLD(KC_0, KC_F10),
-    [MIN_F11] = ACTION_TAP_DANCE_TAP_HOLD(KC_MINS, KC_F1),
-    [PLS_F12] = ACTION_TAP_DANCE_TAP_HOLD(KC_PLUS, KC_F1)
+    [N1] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_1, KC_F1),
+    [N2] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_2, KC_F2),
+    [N3] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_3, KC_F3),
+    [N4] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_4, KC_F4),
+    [N5] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_5, KC_F5),
+    [N6] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_6, KC_F6),
+    [N7] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_7, KC_F7),
+    [N8] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_8, KC_F8),
+    [N9] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_9, KC_F9),
+    [N10] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_0, KC_F10),
+    [MIN_F11] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_MINS, KC_F11),
+    [PLS_F12] = ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(KC_PLUS, KC_F12)
 };
 
 void keyboard_pre_init_user(void) {
