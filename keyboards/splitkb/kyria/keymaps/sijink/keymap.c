@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "keycodes.h"
 #include QMK_KEYBOARD_H
 
 #include "action_layer.h"
@@ -76,7 +77,7 @@ typedef struct {
 #define SYM      TG(_SYM) // unused
 #define NUM      TG(_NUM) // unused
 #define MQUSE    LT(_MOUSE, KC_Q)
-#define HUN      OSL(_HUN) // unused
+#define HUN      TG(_HUN)
 #define ADJUST   TG(_ADJUST)
 #define MO_ADJ   MO(_ADJUST)
 
@@ -113,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_CANARY] = LAYOUT(
       KC_TAB,  KC_W   , KC_L   , KC_Y   , KC_P   , KC_B   ,                                     KC_Z   , KC_F   , KC_O,    KC_U   , KC_QUOT, KC_BSPC,
       KC_ESC , KC_C   , KC_R   , KC_S   , KC_T   , KC_G   ,                                     KC_M   , KC_N   , KC_E   , KC_I   , KC_A   , KC_ENT ,
-      KC_LCTL, MQUSE  , KC_J   , KC_V   , KC_D   , KC_K   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_X   , KC_H   , KC_SLSH, KC_COMM, KC_DOT , KC_DEL ,
+      HUN    , MQUSE  , KC_J   , KC_V   , KC_D   , KC_K   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_X   , KC_H   , KC_SLSH, KC_COMM, KC_DOT , KC_DEL ,
                                  MO_ADJ , MO_NAV ,KC_SPC,TD(WM_NAV),XXXXXXX, XXXXXXX, OSL_SYM, KC_LSFT , MO_NAV , XXXXXXX
     ),
     [_SYM] = LAYOUT(
@@ -141,9 +142,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
     ),
     [_HUN] = LAYOUT(
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, U_UMLAU, U_ACUT , U_DACUT, O_UMLAU, _______,
-      XXXXXXX, A_ACUT , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, XXXXXXX, E_ACUT , I_ACUT , O_ACUT , _______,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, O_DACUT, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_UMLAU, O_ACUT , U_ACUT , XXXXXXX, _______,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_DACUT, E_ACUT , I_ACUT , A_ACUT , _______,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, U_UMLAU, U_DACUT, XXXXXXX, XXXXXXX, XXXXXXX,
                                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX
     ),
     [_ADJUST] = LAYOUT(
@@ -201,6 +202,10 @@ layer_state_t cached_layer_state;
 #define SIJ_UMLAUT SS_DOWN(X_RALT)"\""SS_UP(X_RALT)
 
 bool process_hun_macros(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == KC_RSFT || keycode == KC_LSFT) {
+        return true;
+    }
+
     uint8_t mods = get_mods();
     uint8_t oneshot_mods = get_oneshot_mods();
     bool shifted = (mods & MOD_MASK_SHIFT) | (oneshot_mods & MOD_MASK_SHIFT);
