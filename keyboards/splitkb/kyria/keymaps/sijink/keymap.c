@@ -13,7 +13,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "hun.h"
 #include "keycodes.h"
+#include "global.h"
+#include "rgb.h"
 #include QMK_KEYBOARD_H
 
 #include "action_layer.h"
@@ -24,38 +27,6 @@
 #include "quantum.h"
 #include "oneshot.h"
 #include "rgblight.h"
-
-enum layers {
-    _CANARY = 0,
-    _SYM,
-    _NUM,
-    _NAV,
-    _MOUSE,
-    _HUN,
-    _ADJUST,
-};
-
-enum keycodes {
-    // one-shot callum-style mods
-    OS_SHFT = SAFE_RANGE,
-    OS_CTRL,
-    OS_ALT,
-    OS_GUI,
-    // OSL(...), but not reset by keypresses in higher layers
-    OSL_SYM,
-    // TG(...), but on keydown
-    TG_NUM,
-    // accented hungarian characters
-    A_ACUT,
-    E_ACUT,
-    I_ACUT,
-    O_ACUT,
-    O_DACUT,
-    O_UMLAU,
-    U_ACUT,
-    U_DACUT,
-    U_UMLAU
-};
 
 typedef enum {
     TD_NONE,
@@ -82,6 +53,8 @@ typedef struct {
 #define MO_ADJ   MO(_ADJUST)
 
 // tap dance
+// NOTE: order of enum variants may matter if we're doing containment checks
+// using arithmetic comparison!
 enum {
     WM_NAV, // GUI | shift+GUI | hold for NAV
     Q_HUN, // q | hold for one-shot HUN
@@ -112,81 +85,75 @@ enum {
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_CANARY] = LAYOUT(
-      KC_TAB,  KC_W   , KC_L   , KC_Y   , KC_P   , KC_B   ,                                     KC_Z   , KC_F   , KC_O,    KC_U   , KC_QUOT, KC_BSPC,
-      KC_ESC , KC_C   , KC_R   , KC_S   , KC_T   , KC_G   ,                                     KC_M   , KC_N   , KC_E   , KC_I   , KC_A   , KC_ENT ,
-      HUN    , MQUSE  , KC_J   , KC_V   , KC_D   , KC_K   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_X   , KC_H   , KC_SLSH, KC_COMM, KC_DOT , KC_DEL ,
-                                 MO_ADJ , MO_NAV ,KC_SPC,TD(WM_NAV),XXXXXXX, XXXXXXX, OSL_SYM, KC_LSFT , MO_NAV , XXXXXXX
+        KC_TAB,  KC_W   , KC_L   , KC_Y   , KC_P   , KC_B   ,                                     KC_Z   , KC_F   , KC_O,    KC_U   , KC_QUOT, KC_BSPC,
+        KC_ESC , KC_C   , KC_R   , KC_S   , KC_T   , KC_G   ,                                     KC_M   , KC_N   , KC_E   , KC_I   , KC_A   , KC_ENT ,
+        HUN    , MQUSE  , KC_J   , KC_V   , KC_D   , KC_K   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_X   , KC_H   , KC_SLSH, KC_COMM, KC_DOT , KC_DEL ,
+        MO_ADJ , MO_NAV ,KC_SPC,TD(WM_NAV),XXXXXXX, XXXXXXX, OSL_SYM, KC_LSFT , MO_NAV , XXXXXXX
     ),
     [_SYM] = LAYOUT(
-      _______, KC_TILD, KC_AT  , KC_HASH, KC_DLR , KC_PERC,                                     KC_CIRC, KC_LPRN, KC_RPRN, KC_EQL , KC_COLN, _______,
-      _______, KC_PLUS, KC_AMPR, KC_ASTR, KC_UNDS, KC_MINS,                                     KC_BSLS, KC_LCBR, KC_RCBR, KC_PIPE, KC_SCLN, _______,
-      _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, XXXXXXX ,XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, KC_GRV , KC_EXLM, _______,
-                                 XXXXXXX, XXXXXXX, _______, MO_NAV , XXXXXXX, XXXXXXX, TG_NUM , BASE   , XXXXXXX, XXXXXXX
+        _______, KC_TILD, KC_AT  , KC_HASH, KC_DLR , KC_PERC,                                     KC_CIRC, KC_LPRN, KC_RPRN, KC_EQL , KC_COLN, _______,
+        _______, KC_PLUS, KC_AMPR, KC_ASTR, KC_UNDS, KC_MINS,                                     KC_BSLS, KC_LCBR, KC_RCBR, KC_PIPE, KC_SCLN, _______,
+        _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, XXXXXXX ,XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, KC_GRV , KC_EXLM, _______,
+        XXXXXXX, XXXXXXX, _______, MO_NAV , XXXXXXX, XXXXXXX, TG_NUM , BASE   , XXXXXXX, XXXXXXX
     ),
     [_NUM] = LAYOUT(
-      _______, _______, XXXXXXX, TD(N9) , TD(N7) , KC_QUES,                                     _______, TD(N6) , TD(N8) , _______, KC_QUOT, _______,
-      _______, _______, TD(N5) , TD(N3) , TD(N1) ,TD(MIN_F11),                              TD(PLS_F12), TD(N10), TD(N2) , TD(N4) , KC_DQUO, _______,
-      _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LT  , KC_GT  , KC_SLSH, KC_COMM, KC_DOT , _______,
-                                 XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
+        _______, _______, XXXXXXX, TD(N9) , TD(N7) , KC_QUES,                                     _______, TD(N6) , TD(N8) , _______, KC_QUOT, _______,
+        _______, _______, TD(N5) , TD(N3) , TD(N1) ,TD(MIN_F11),                              TD(PLS_F12), TD(N10), TD(N2) , TD(N4) , KC_DQUO, _______,
+        _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LT  , KC_GT  , KC_SLSH, KC_COMM, KC_DOT , _______,
+        XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
     ),
     [_NAV] = LAYOUT(
-      _______, KC_TAB , KC_MPRV, KC_MPLY, KC_MNXT, KC_MFFD,                                     KC_CUT,TD(CPY_PSC),TD(PST_INS),KC_FIND, KC_BSPC, _______,
-      _______, KC_ESC , KC_VOLD, KC_MUTE, KC_VOLU, KC_MRWD,                                     KC_LEFT, KC_DOWN,  KC_UP  ,    KC_RGHT, KC_ENT , _______,
-      _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, KC_PAUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN,  KC_PGUP,    KC_END , KC_DEL , _______,
-                                 XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, ADJUST , XXXXXXX, XXXXXXX,  XXXXXXX
+        _______, KC_TAB , KC_MPRV, KC_MPLY, KC_MNXT, KC_MFFD,                                     KC_CUT,TD(CPY_PSC),TD(PST_INS),KC_FIND, KC_BSPC, _______,
+        _______, KC_ESC , KC_VOLD, KC_MUTE, KC_VOLU, KC_MRWD,                                     KC_LEFT, KC_DOWN,  KC_UP  ,    KC_RGHT, KC_ENT , _______,
+        _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, KC_PAUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN,  KC_PGUP,    KC_END , KC_DEL , _______,
+        XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, ADJUST , XXXXXXX, XXXXXXX,  XXXXXXX
     ),
     [_MOUSE] = LAYOUT(
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     KC_CUT , KC_COPY, KC_PSTE, KC_FIND, KC_BSPC, _______,
-      XXXXXXX, KC_BTN4, KC_BTN3, KC_BTN2, KC_BTN1, KC_BTN5,                                     KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ENT , _______,
-      XXXXXXX, XXXXXXX, KC_ACL2, KC_ACL1, KC_ACL0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_DEL , _______,
-                                 XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     KC_CUT , KC_COPY, KC_PSTE, KC_FIND, KC_BSPC, _______,
+        XXXXXXX, KC_BTN4, KC_BTN3, KC_BTN2, KC_BTN1, KC_BTN5,                                     KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ENT , _______,
+        XXXXXXX, XXXXXXX, KC_ACL2, KC_ACL1, KC_ACL0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_DEL , _______,
+        XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
     ),
     [_HUN] = LAYOUT(
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_UMLAU, O_ACUT , U_ACUT , XXXXXXX, _______,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_DACUT, E_ACUT , I_ACUT , A_ACUT , _______,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, U_UMLAU, U_DACUT, XXXXXXX, XXXXXXX, XXXXXXX,
-                                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_UMLAU, O_ACUT , U_ACUT , XXXXXXX, _______,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_DACUT, E_ACUT , I_ACUT , A_ACUT , _______,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, U_UMLAU, U_DACUT, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX
     ),
     [_ADJUST] = LAYOUT(
-      XXXXXXX, RGB_M_B, RGB_M_R, RGB_M_SW,XXXXXXX, XXXXXXX,                                     RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX, XXXXXXX,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX, XXXXXXX,
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                 XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, BASE   , XXXXXXX, RGB_TOG
+        XXXXXXX, RGB_M_B, RGB_M_R, RGB_M_SW,XXXXXXX, XXXXXXX,                                     RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, BASE   , XXXXXXX, RGB_TOG
     ),
-//     [_LAYERINDEX] = LAYOUT(
-//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-//       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-//                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-//     ),
 };
 
 bool is_oneshot_cancel_key(uint16_t keycode) {
     switch (keycode) {
         // Reset one-shot mods only on shift
-    case KC_LSFT:
-        return true;
-    default:
-        return false;
+        case KC_LSFT:
+            return true;
+        default:
+            return false;
     }
 }
 
 bool is_oneshot_ignored_key(uint16_t keycode) {
     switch (keycode) {
-    case OS_SHFT:
-    case OS_CTRL:
-    case OS_ALT:
-    case OS_GUI:
-    // Also keep one-shot mods on layer switches...
-    case BASE:
-    case OSL_SYM:
-    case TG_NUM:
-    case TD(WM_NAV):
-    case MO_NAV:
-    case MQUSE:
-        return true;
-    default:
-        return false;
+        case OS_SHFT:
+        case OS_CTRL:
+        case OS_ALT:
+        case OS_GUI:
+        // Also keep one-shot mods on layer switches...
+        case BASE:
+        case OSL_SYM:
+        case TG_NUM:
+        case TD(WM_NAV):
+        case MO_NAV:
+        case MQUSE:
+            return true;
+        default:
+            return false;
     }
 }
 
@@ -194,76 +161,6 @@ oneshot_state os_shft_state = os_up_unqueued;
 oneshot_state os_ctrl_state = os_up_unqueued;
 oneshot_state os_alt_state = os_up_unqueued;
 oneshot_state os_gui_state = os_up_unqueued;
-
-layer_state_t cached_layer_state;
-
-#define SIJ_ACUTE  SS_DOWN(X_RALT)"'"SS_UP(X_RALT)
-#define SIJ_DACUTE SS_DOWN(X_RALT)SS_DOWN(X_LSFT)"2"SS_UP(X_LSFT)SS_UP(X_RALT)
-#define SIJ_UMLAUT SS_DOWN(X_RALT)"\""SS_UP(X_RALT)
-
-bool process_hun_macros(uint16_t keycode, keyrecord_t *record) {
-    if (keycode == KC_RSFT || keycode == KC_LSFT) {
-        return true;
-    }
-
-    uint8_t mods = get_mods();
-    uint8_t oneshot_mods = get_oneshot_mods();
-    bool shifted = (mods & MOD_MASK_SHIFT) | (oneshot_mods & MOD_MASK_SHIFT);
-
-    clear_mods();
-    clear_oneshot_mods();
-
-    const char *letter = NULL;
-
-    switch(keycode) {
-        case A_ACUT:
-        case E_ACUT:
-        case I_ACUT:
-        case O_ACUT:
-        case U_ACUT:
-            SEND_STRING(SIJ_ACUTE);
-            break;
-        case O_UMLAU:
-        case U_UMLAU:
-            SEND_STRING(SIJ_UMLAUT);
-            break;
-        case O_DACUT:
-        case U_DACUT:
-            SEND_STRING(SIJ_DACUTE);
-            break;
-    }
-
-    switch(keycode) {
-        case A_ACUT:
-            letter = shifted ? "A" : "a";
-            break;
-        case E_ACUT:
-            letter = shifted ? "E" : "e";
-            break;
-        case I_ACUT:
-            letter = shifted ? "I" : "i";
-            break;
-        case O_ACUT:
-        case O_UMLAU:
-        case O_DACUT:
-            letter = shifted ? "O" : "o";
-            break;
-        case U_ACUT:
-        case U_UMLAU:
-        case U_DACUT:
-            letter = shifted ? "U" : "u";
-            break;
-    }
-
-    if(letter) {
-        add_mods(mods);
-        send_string(letter);
-    }
-
-    layer_off(_HUN);
-
-    return false;
-}
 
 bool tap_hold(uint16_t keycode, keyrecord_t *record, uint16_t trigger, uint16_t hold) {
     if (keycode == trigger) {
@@ -300,56 +197,6 @@ bool osl_on_keydown(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-const rgblight_segment_t PROGMEM rgb_layer_base[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 7, HSV_OFF},
-    {31, 7, HSV_OFF}
-);
-
-const rgblight_segment_t PROGMEM rgb_layer_sym[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 7, HSV_RED},
-    {31, 7, HSV_RED}
-);
-
-const rgblight_segment_t PROGMEM rgb_layer_num[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 7, HSV_GOLD},
-    {31, 7, HSV_GOLD}
-);
-
-const rgblight_segment_t PROGMEM rgb_layer_nav[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 7, HSV_AZURE},
-    {31, 7, HSV_AZURE}
-);
-
-const rgblight_segment_t PROGMEM rgb_layer_hun[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 1, HSV_WHITE},
-    {1, 4, HSV_RED},
-    {5, 1, HSV_WHITE},
-    {6, 1, HSV_RED},
-    {31, 1, HSV_WHITE},
-    {32, 4, HSV_GREEN},
-    {36, 1, HSV_WHITE},
-    {37, 1, HSV_GREEN}
-);
-
-const rgblight_segment_t* const PROGMEM rgb_layers[] = RGBLIGHT_LAYERS_LIST(
-    rgb_layer_base, rgb_layer_sym, rgb_layer_num, rgb_layer_nav, rgb_layer_hun
-);
-
-layer_state_t default_layer_state_set_user(layer_state_t state) {
-    rgblight_set_layer_state(0, layer_state_cmp(state, _CANARY));
-    return state;
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    rgblight_set_layer_state(0, layer_state_cmp(state, _CANARY));
-    rgblight_set_layer_state(1, layer_state_cmp(state, _SYM));
-    rgblight_set_layer_state(2, layer_state_cmp(state, _NUM));
-    rgblight_set_layer_state(3, layer_state_cmp(state, _NAV));
-    rgblight_set_layer_state(4, layer_state_cmp(state, _HUN));
-
-    cached_layer_state = state;
-    return state;
-}
 
 uint16_t osm_sym_ignored_keycodes[] = {TG_NUM, OS_GUI, OS_ALT, OS_CTRL, OS_SHFT, 0};
 
@@ -368,34 +215,12 @@ void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
 void handle_tap_dance(uint16_t keycode, keyrecord_t *record) {
     tap_dance_action_t *action;
 
-    switch (keycode) {
-        case TD(AMP_TLD):
-        case TD(U_UNDS):
-        case TD(G_MINS):
-        case TD(COM_QUO):
-        case TD(DOT_DQU):
-        case TD(SLS_EXL):
-        case TD(SLS_BSL):
-        case TD(QUO_GRV):
-        case TD(CPY_PSC):
-        case TD(PST_INS):
-        case TD(N1):
-        case TD(N2):
-        case TD(N3):
-        case TD(N4):
-        case TD(N5):
-        case TD(N6):
-        case TD(N7):
-        case TD(N8):
-        case TD(N9):
-        case TD(N10):
-        case TD(MIN_F11):
-        case TD(PLS_F12):
-            action = &tap_dance_actions[TD_INDEX(keycode)];
-            if (!record->event.pressed && action->state.count && !action->state.finished) {
-                tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)action->user_data;
-                tap_code16(tap_hold->tap);
-            }
+    if (TD(AMP_TLD) <= keycode && keycode <= TD(PLS_F12)) {
+        action = &tap_dance_actions[TD_INDEX(keycode)];
+        if (!record->event.pressed && action->state.count && !action->state.finished) {
+            tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)action->user_data;
+            tap_code16(tap_hold->tap);
+        }
     }
 }
 
@@ -443,7 +268,7 @@ td_state_t cur_dance(tap_dance_state_t *state) {
 
 void td_wm_nav_finished_fn(tap_dance_state_t *state, void *user_data) {
     td_state_t td_state = cur_dance(state);
-    switch (td_state) {
+    switch  (td_state) {
         case (TD_SINGLE_TAP):
             set_oneshot_mods(MOD_BIT_LGUI);
             break;
@@ -521,10 +346,10 @@ void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
 }
 
 #define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
-    { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
+{ .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
 
 #define ACTION_TAP_DANCE_TAP_HOLD_NO_REPEAT(tap, hold) \
-    { .fn = {NULL, tap_dance_tap_hold_no_repeat_finished, NULL}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
+{ .fn = {NULL, tap_dance_tap_hold_no_repeat_finished, NULL}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
 
 tap_dance_action_t tap_dance_actions[] = {
     [WM_NAV] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_wm_nav_finished_fn, td_wm_nav_reset_fn),
@@ -554,15 +379,9 @@ tap_dance_action_t tap_dance_actions[] = {
 };
 
 void keyboard_pre_init_user(void) {
-    // Disable on-board Liatris LED
-    setPinOutput(24);
-    writePinHigh(24);
+    disable_onboard_liatris_led();
 }
 
 void keyboard_post_init_user(void) {
-    rgblight_enable_noeeprom();
-    rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
-    rgblight_set_speed_noeeprom(32);
-
-    rgblight_layers = rgb_layers;
+    rgblight_setup();
 }

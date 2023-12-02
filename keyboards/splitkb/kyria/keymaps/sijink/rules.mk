@@ -6,4 +6,4 @@ MOUSEKEY_ENABLE = yes
 TAP_DANCE_ENABLE = yes
 UNICODE_ENABLE = yes
 
-SRC += oneshot.c
+SRC += oneshot.c hun.c rgb.c
