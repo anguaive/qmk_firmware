@@ -88,43 +88,44 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_W   , KC_L   , KC_Y   , KC_P   , KC_B   ,                                     KC_Z   , KC_F   , KC_O,    KC_U   , KC_QUOT, KC_BSPC,
         KC_ESC , KC_C   , KC_R   , KC_S   , KC_T   , KC_G   ,                                     KC_M   , KC_N   , KC_E   , KC_I   , KC_A   , KC_ENT ,
         HUN    , MQUSE  , KC_J   , KC_V   , KC_D   , KC_K   , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_X   , KC_H   , KC_SLSH, KC_COMM, KC_DOT , KC_DEL ,
-        MO_ADJ , MO_NAV ,KC_SPC,TD(WM_NAV),XXXXXXX, XXXXXXX, OSL_SYM, KC_LSFT , MO_NAV , XXXXXXX
+                                   MO_ADJ , MO_NAV ,KC_SPC,TD(WM_NAV),XXXXXXX, XXXXXXX, OSL_SYM, KC_LSFT , MO_NAV , XXXXXXX
+
     ),
     [_SYM] = LAYOUT(
         _______, KC_TILD, KC_AT  , KC_HASH, KC_DLR , KC_PERC,                                     KC_CIRC, KC_LPRN, KC_RPRN, KC_EQL , KC_COLN, _______,
         _______, KC_PLUS, KC_AMPR, KC_ASTR, KC_UNDS, KC_MINS,                                     KC_BSLS, KC_LCBR, KC_RCBR, KC_PIPE, KC_SCLN, _______,
         _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, XXXXXXX ,XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, KC_GRV , KC_EXLM, _______,
-        XXXXXXX, XXXXXXX, _______, MO_NAV , XXXXXXX, XXXXXXX, TG_NUM , BASE   , XXXXXXX, XXXXXXX
+                                   XXXXXXX, XXXXXXX, _______, MO_NAV , XXXXXXX, XXXXXXX, TG_NUM , BASE   , XXXXXXX, XXXXXXX
     ),
     [_NUM] = LAYOUT(
         _______, _______, XXXXXXX, TD(N9) , TD(N7) , KC_QUES,                                     _______, TD(N6) , TD(N8) , _______, KC_QUOT, _______,
         _______, _______, TD(N5) , TD(N3) , TD(N1) ,TD(MIN_F11),                              TD(PLS_F12), TD(N10), TD(N2) , TD(N4) , KC_DQUO, _______,
         _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LT  , KC_GT  , KC_SLSH, KC_COMM, KC_DOT , _______,
-        XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
+                                   XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX, _______, _______, XXXXXXX, XXXXXXX
     ),
     [_NAV] = LAYOUT(
         _______, KC_TAB , KC_MPRV, KC_MPLY, KC_MNXT, KC_MFFD,                                     KC_CUT,TD(CPY_PSC),TD(PST_INS),KC_FIND, KC_BSPC, _______,
         _______, KC_ESC , KC_VOLD, KC_MUTE, KC_VOLU, KC_MRWD,                                     KC_LEFT, KC_DOWN,  KC_UP  ,    KC_RGHT, KC_ENT , _______,
         _______, OS_GUI , OS_ALT , OS_CTRL, OS_SHFT, KC_PAUS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_PGDN,  KC_PGUP,    KC_END , KC_DEL , _______,
-        XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, ADJUST , XXXXXXX, XXXXXXX,  XXXXXXX
+                                   XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, ADJUST , XXXXXXX, XXXXXXX,  XXXXXXX
     ),
     [_MOUSE] = LAYOUT(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     KC_CUT , KC_COPY, KC_PSTE, KC_FIND, KC_BSPC, _______,
         XXXXXXX, KC_BTN4, KC_BTN3, KC_BTN2, KC_BTN1, KC_BTN5,                                     KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ENT , _______,
         XXXXXXX, XXXXXXX, KC_ACL2, KC_ACL1, KC_ACL0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, KC_DEL , _______,
-        XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+                                   XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
     ),
     [_HUN] = LAYOUT(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_UMLAU, O_ACUT , U_ACUT , XXXXXXX, _______,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     XXXXXXX, O_DACUT, E_ACUT , I_ACUT , A_ACUT , _______,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, U_UMLAU, U_DACUT, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX
+                                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX
     ),
     [_ADJUST] = LAYOUT(
         XXXXXXX, RGB_M_B, RGB_M_R, RGB_M_SW,XXXXXXX, XXXXXXX,                                     RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                     RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, BASE   , XXXXXXX, RGB_TOG
+                                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, BASE   , XXXXXXX, RGB_TOG
     ),
 };
 
