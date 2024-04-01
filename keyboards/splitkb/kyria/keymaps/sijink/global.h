@@ -9,6 +9,7 @@ enum layers {
     _CANARY = 0,
     _SYM,
     _NUM,
+    _NUMSYM,
     _NAV,
     _MOUSE,
     _HUN,
@@ -16,15 +17,11 @@ enum layers {
 };
 
 enum keycodes {
-    // one-shot callum-style mods
-    OS_SHFT = SAFE_RANGE,
-    OS_CTRL,
-    OS_ALT,
-    OS_GUI,
     // OSL(...), but not reset by keypresses in higher layers
-    OSL_SYM,
+    OSL_SYM = SAFE_RANGE,
     // TG(...), but on keydown
     TG_NUM,
+    TG_NUMSYM,
     // accented hungarian characters
     A_ACUT,
     E_ACUT,
@@ -36,4 +33,3 @@ enum keycodes {
     U_DACUT,
     U_UMLAU
 };
-

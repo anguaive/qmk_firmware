@@ -22,6 +22,8 @@
 
 #define NO_ALT_REPEAT_KEY
 
+#define PERMISSIVE_HOLD
+
 #define MK_COMBINED
 #define MOUSEKEY_DELAY 0
 #define MOUSEKEY_INTERVAL 16
@@ -44,7 +46,7 @@
 #    define SPLIT_LAYER_STATE_ENABLE
 #    define RGBLIGHT_SLEEP
 #    define RGBLIGHT_SPLIT
-#    undef  RGBLIGHT_LIMIT_VAL
+#    undef RGBLIGHT_LIMIT_VAL
 #    define RGBLIGHT_LIMIT_VAL 128
 #endif
 
