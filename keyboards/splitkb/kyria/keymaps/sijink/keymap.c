@@ -24,6 +24,7 @@
 #include "action_util.h"
 #include "modifiers.h"
 #include "quantum.h"
+#include "process_tap_dance.h"
 #include "rgblight.h"
 
 // Layer aliases
@@ -58,20 +59,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_SYM] = LAYOUT(
         _______   , KC_TILD   , KC_AT     , KC_HASH   , KC_DLR    , KC_PERC   ,                                                 XXXXXXX   , XXXXXXX   , KC_PLUS   , KC_EQL    , KC_GRV    , _______   ,
-        _______   ,LG(KC_COLN),LA(KC_LBRC),LC(KC_LCBR),LS(KC_LPRN), KC_LT     ,                                                 KC_GT     ,RS(KC_RPRN),RC(KC_RCBR),RA(KC_RBRC),RG(KC_SCLN), _______   ,
-        _______   , XXXXXXX   , KC_PIPE   , KC_MINS   , KC_UNDS   , KC_AMPR   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , KC_ASTR   , KC_BSLS   , KC_CIRC   , KC_EXLM   , _______   ,
+        _______   ,LG(KC_COLN),LA(KC_LBRC),LC(KC_LCBR),LS(KC_LPRN), KC_LT     ,                                                 KC_BSLS   ,RS(KC_MINS),RC(KC_UNDS),RA(KC_PIPE),RG(KC_SCLN), _______   ,
+        _______   , XXXXXXX   , KC_RBRC   , KC_RCBR   , KC_RPRN   , KC_GT     , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , KC_AMPR   , KC_ASTR   , KC_CIRC   , KC_EXLM   , _______   ,
                                             XXXXXXX   , XXXXXXX   , XXXXXXX   , _______   , XXXXXXX   , XXXXXXX   , TG_NUM    , BASE      , XXXXXXX   , XXXXXXX
     ),
     [_NUM] = LAYOUT(
         _______   , KC_F9     , KC_F5     , KC_F3     , KC_F1     , KC_F7     ,                                                 KC_F6     , KC_F10    , KC_F2     , KC_F4     , KC_F8     , _______   ,
         _______   , LG(KC_NO) , LA(KC_5)  , LC(KC_3)  , LS(KC_1)  , XXXXXXX   ,                                                 XXXXXXX   , RS(KC_0)  , RC(KC_2)  , RA(KC_4)  , RG(KC_NO) , _______   ,
         _______   , XXXXXXX   , XXXXXXX   , KC_9      , KC_7      , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , KC_6      , KC_8      , XXXXXXX   , XXXXXXX   , _______   ,
-                                            XXXXXXX   , XXXXXXX   , XXXXXXX   , _______   , XXXXXXX   , XXXXXXX   , TG_NUMSYM , _______   , XXXXXXX   , XXXXXXX
+                                            XXXXXXX   , XXXXXXX   , XXXXXXX   , _______   , XXXXXXX   , XXXXXXX   , TG_NUMSYM , BASE      , XXXXXXX   , XXXXXXX
     ),
     [_NUMSYM] = LAYOUT(
         _______   , KC_TILD   , KC_AT     , KC_HASH   , KC_DLR    , KC_PERC   ,                                                 XXXXXXX   , XXXXXXX   , KC_PLUS   , KC_EQL    , KC_GRV    , _______   ,
-        _______   ,LG(KC_COLN),LA(KC_LBRC),LC(KC_LCBR),LS(KC_LPRN), KC_LT     ,                                                 KC_GT     ,RS(KC_RPRN),RC(KC_RCBR),RA(KC_RBRC),RG(KC_SCLN), _______   ,
-        _______   , XXXXXXX   , KC_PIPE   , KC_MINS   , KC_UNDS   , KC_AMPR   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , KC_ASTR   , KC_BSLS   , KC_CIRC   , KC_EXLM   , _______   ,
+        _______   ,LG(KC_COLN),LA(KC_LBRC),LC(KC_LCBR),LS(KC_LPRN), KC_LT     ,                                                 KC_BSLS   ,RS(KC_MINS),RC(KC_UNDS),RA(KC_PIPE),RG(KC_SCLN), _______   ,
+        _______   , XXXXXXX   , KC_RBRC   , KC_RCBR   , KC_RPRN   , KC_GT     , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , KC_AMPR   , KC_ASTR   , KC_CIRC   , KC_EXLM   , _______   ,
                                             XXXXXXX   , XXXXXXX   , XXXXXXX   , _______   , XXXXXXX   , XXXXXXX   , _______   , BASE      , XXXXXXX   , XXXXXXX
     ),
     [_NAV] = LAYOUT(
@@ -94,12 +95,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_ADJUST] = LAYOUT(
         XXXXXXX   , RGB_M_B   , RGB_M_R   , RGB_M_SW  , XXXXXXX   , XXXXXXX   ,                                                 RGB_HUI   , RGB_SAI   , RGB_VAI   , XXXXXXX   , XXXXXXX   , XXXXXXX   ,
-        XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   ,                                                 RGB_HUD   , RGB_SAD   , RGB_VAD   , XXXXXXX   , XXXXXXX   , XXXXXXX   ,
+        XXXXXXX   , DT_PRNT   , DT_UP     , DT_DOWN   , XXXXXXX   , XXXXXXX   ,                                                 RGB_HUD   , RGB_SAD   , RGB_VAD   , XXXXXXX   , XXXXXXX   , XXXXXXX   ,
         XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   ,
                                             XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , XXXXXXX   , BASE      , XXXXXXX   , RGB_TOG
     ),
 };
-
 
 bool tg_on_keydown(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed && keycode == TG_NUM) {
@@ -123,16 +123,38 @@ bool osl_on_keydown(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+bool intercept_mod_tap(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LC(KC_LCBR):
+        case LS(KC_LPRN):
+        case RC(KC_UNDS):
+        case RA(KC_PIPE):
+        case LG(KC_COLN): {
+            uint16_t kc = QK_MOD_TAP_GET_TAP_KEYCODE(keycode);
+            if (record->tap.count && record->event.pressed) {
+                tap_code16(S(kc));
+                layer_off(_SYM); // if we return false, we don't reach post_process_record_user
+                return false;
+            }
+            break;
+        }
+    }
+
+    return true;
+}
+
 void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed && get_highest_layer(cached_layer_state) <= SYM) {
         layer_off(_SYM);
     }
 }
 
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (!tg_on_keydown(keycode, record)) return false;
     if (!osl_on_keydown(keycode, record)) return false;
+    if (!intercept_mod_tap(keycode, record)) return false;
 
     if(record->event.pressed && IS_LAYER_ON(_HUN)) {
         return process_hun_macros(keycode, record);
